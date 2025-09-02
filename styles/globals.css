@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+.feather-animation {
+  animation: feather-animation 1.5s ease-in-out infinite;
+}
+
+@keyframes feather-animation {
+  0% {
+    transform: rotate(-7deg);
+  }
+
+  50% {
+    transform: rotate(7deg);
+  }
+
+  100% {
+    transform: rotate(-7deg);
+  }
+}
+
+.react-card-front,
+.react-card-back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.slick-dots li button:before {
+  color: white !important;
+}
+
+html[style="color-scheme: light;"] .slick-dots li button:before {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+
+@config "../tailwind.config.js"
