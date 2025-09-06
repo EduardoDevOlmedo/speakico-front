@@ -27,7 +27,6 @@ import i18n from "@/lib/i18n";
 import { useHobbies } from "./useHobbies";
 const MAX_HOBBIES = 5;
 
-
 export const LoginModal = () => {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
@@ -62,7 +61,6 @@ function AuthTabs() {
     const { t } = useTranslation('common', { keyPrefix: "auth" });
     const { mutate: loginUser, isLoading: isLoginLoading, hasError: isLoginError } = useLoginMutation();
     const { registerUser, isRegisterLoading, error: registerError } = useRegisterMutation();
-    // Formik for Login
     const loginFormik = useFormik({
         initialValues: {
             email: "",
@@ -157,201 +155,208 @@ function AuthTabs() {
             onSelectionChange={(key) => setTab(key as "login" | "register")}
         >
             <Tab key="login" title={t('login')}>
-                <ModalHeader>{t('loginModal.welcome')}</ModalHeader>
-                <ModalBody>
-                    <form onSubmit={loginFormik.handleSubmit} noValidate>
-                        <Input
-                            type="email"
-                            label={t('loginModal.email')}
-                            name="email"
-                            value={loginFormik.values.email}
-                            onChange={loginFormik.handleChange}
-                            onBlur={loginFormik.handleBlur}
-                            isInvalid={!!(loginFormik.touched.email && loginFormik.errors.email)}
-                            errorMessage={loginFormik.touched.email && loginFormik.errors.email ? loginFormik.errors.email : undefined}
-                            className="mb-4"
-                            autoComplete="off"
-                        />
-                        <Input
-                            type="password"
-                            label={t('loginModal.password')}
-                            name="password"
-                            value={loginFormik.values.password}
-                            onChange={loginFormik.handleChange}
-                            onBlur={loginFormik.handleBlur}
-                            isInvalid={!!(loginFormik.touched.password && loginFormik.errors.password)}
-                            errorMessage={loginFormik.touched.password && loginFormik.errors.password ? loginFormik.errors.password : undefined}
-                            className="mb-4"
-                            autoComplete="off"
-                        />
-                        <Button fullWidth className="mt-2 mb-2" type="submit" isDisabled={!loginFormik.isValid} isLoading={isLoginLoading || loginFormik.isSubmitting && !isLoginError} >
-                            {t('login')}
-                        </Button>
-                        {isLoginError && <p className="text-red-500 text-sm">{t('loginModal.error')}</p>}
-                    </form>
-                </ModalBody>
+                {tab === "login" && (
+                    <>
+                        <ModalHeader>{t('loginModal.welcome')}</ModalHeader>
+                        <ModalBody>
+                            <form onSubmit={loginFormik.handleSubmit} noValidate>
+                                <Input
+                                    type="email"
+                                    label={t('loginModal.email')}
+                                    name="email"
+                                    value={loginFormik.values.email}
+                                    onChange={loginFormik.handleChange}
+                                    onBlur={loginFormik.handleBlur}
+                                    isInvalid={!!(loginFormik.touched.email && loginFormik.errors.email)}
+                                    errorMessage={loginFormik.touched.email && loginFormik.errors.email ? loginFormik.errors.email : undefined}
+                                    className="mb-4"
+                                    autoComplete="off"
+                                />
+                                <Input
+                                    type="password"
+                                    label={t('loginModal.password')}
+                                    name="password"
+                                    value={loginFormik.values.password}
+                                    onChange={loginFormik.handleChange}
+                                    onBlur={loginFormik.handleBlur}
+                                    isInvalid={!!(loginFormik.touched.password && loginFormik.errors.password)}
+                                    errorMessage={loginFormik.touched.password && loginFormik.errors.password ? loginFormik.errors.password : undefined}
+                                    className="mb-4"
+                                    autoComplete="off"
+                                />
+                                <Button fullWidth className="mt-2 mb-2" type="submit" isDisabled={!loginFormik.isValid} isLoading={isLoginLoading || loginFormik.isSubmitting && !isLoginError} >
+                                    {t('login')}
+                                </Button>
+                                {isLoginError && <p className="text-red-500 text-sm">{t('loginModal.error')}</p>}
+                            </form>
+                        </ModalBody>
+                    </>
+                )}
             </Tab>
 
             <Tab key="register" title={t('register')}>
-                <ModalHeader>
-                    {t('registerModal.welcome')}
-                </ModalHeader>
-                <ModalBody>
-                    <form onSubmit={registerFormik.handleSubmit} noValidate>
-                        <Input
-                            type="email"
-                            label={t('registerModal.email')}
-                            name="email"
-                            value={registerFormik.values.email}
-                            onChange={registerFormik.handleChange}
-                            onBlur={registerFormik.handleBlur}
-                            isInvalid={!!(registerFormik.touched.email && registerFormik.errors.email)}
-                            errorMessage={registerFormik.touched.email && registerFormik.errors.email ? registerFormik.errors.email : undefined}
-                            className="mb-4"
-                            autoComplete="off"
-                        />
-                        <Input
-                            type="text"
-                            label={t('registerModal.name')}
-                            name="name"
-                            value={registerFormik.values.name}
-                            onChange={registerFormik.handleChange}
-                            onBlur={registerFormik.handleBlur}
-                            isInvalid={!!(registerFormik.touched.name && registerFormik.errors.name)}
-                            errorMessage={registerFormik.touched.name && registerFormik.errors.name ? registerFormik.errors.name : undefined}
-                            className="mb-4"
-                        />
-                        <Input
-                            type="password"
-                            label={t('registerModal.password')}
-                            name="password"
-                            value={registerFormik.values.password}
-                            onChange={registerFormik.handleChange}
-                            onBlur={registerFormik.handleBlur}
-                            isInvalid={!!(registerFormik.touched.password && registerFormik.errors.password)}
-                            errorMessage={registerFormik.touched.password && registerFormik.errors.password ? registerFormik.errors.password : undefined}
-                            className="mb-4"
-                            autoComplete="off"
-                        />
-                        <Input
-                            type="password"
-                            label={t('registerModal.confirmPassword')}
-                            name="confirmPassword"
-                            value={registerFormik.values.confirmPassword}
-                            onChange={registerFormik.handleChange}
-                            onBlur={registerFormik.handleBlur}
-                            isInvalid={!!(registerFormik.touched.confirmPassword && registerFormik.errors.confirmPassword)}
-                            errorMessage={registerFormik.touched.confirmPassword && registerFormik.errors.confirmPassword ? registerFormik.errors.confirmPassword : undefined}
-                            className="mb-4"
-                            autoComplete="new-password"
-                        />
+                {tab === "register" && (
+                    <>
+                        <ModalHeader>
+                            {t('registerModal.welcome')}
+                        </ModalHeader>
+                        <ModalBody>
+                            <form onSubmit={registerFormik.handleSubmit} noValidate>
+                                <Input
+                                    type="email"
+                                    label={t('registerModal.email')}
+                                    name="email"
+                                    value={registerFormik.values.email}
+                                    onChange={registerFormik.handleChange}
+                                    onBlur={registerFormik.handleBlur}
+                                    isInvalid={!!(registerFormik.touched.email && registerFormik.errors.email)}
+                                    errorMessage={registerFormik.touched.email && registerFormik.errors.email ? registerFormik.errors.email : undefined}
+                                    className="mb-4"
+                                    autoComplete="off"
+                                />
+                                <Input
+                                    type="text"
+                                    label={t('registerModal.name')}
+                                    name="name"
+                                    value={registerFormik.values.name}
+                                    onChange={registerFormik.handleChange}
+                                    onBlur={registerFormik.handleBlur}
+                                    isInvalid={!!(registerFormik.touched.name && registerFormik.errors.name)}
+                                    errorMessage={registerFormik.touched.name && registerFormik.errors.name ? registerFormik.errors.name : undefined}
+                                    className="mb-4"
+                                />
+                                <Input
+                                    type="password"
+                                    label={t('registerModal.password')}
+                                    name="password"
+                                    value={registerFormik.values.password}
+                                    onChange={registerFormik.handleChange}
+                                    onBlur={registerFormik.handleBlur}
+                                    isInvalid={!!(registerFormik.touched.password && registerFormik.errors.password)}
+                                    errorMessage={registerFormik.touched.password && registerFormik.errors.password ? registerFormik.errors.password : undefined}
+                                    className="mb-4"
+                                    autoComplete="off"
+                                />
+                                <Input
+                                    type="password"
+                                    label={t('registerModal.confirmPassword')}
+                                    name="confirmPassword"
+                                    value={registerFormik.values.confirmPassword}
+                                    onChange={registerFormik.handleChange}
+                                    onBlur={registerFormik.handleBlur}
+                                    isInvalid={!!(registerFormik.touched.confirmPassword && registerFormik.errors.confirmPassword)}
+                                    errorMessage={registerFormik.touched.confirmPassword && registerFormik.errors.confirmPassword ? registerFormik.errors.confirmPassword : undefined}
+                                    className="mb-4"
+                                    autoComplete="new-password"
+                                />
 
-                        <Select
-                            label={t('registerModal.targetLanguage')}
-                            placeholder={t('registerModal.selectYourTargetLanguage')}
-                            className="mb-4"
-                            name="targetLanguage"
-                            multiple={false}
-                            onSelectionChange={(key) => {
-                                i18n.changeLanguage(key.currentKey === 'en' ? 'es' : 'en');
-                                registerFormik.setFieldValue("targetLanguage", key.currentKey as string);
-                            }}
-                            onBlur={registerFormik.handleBlur}
-                            isInvalid={!!(registerFormik.touched.targetLanguage && registerFormik.errors.targetLanguage)}
-                            errorMessage={registerFormik.touched.targetLanguage && registerFormik.errors.targetLanguage ? registerFormik.errors.targetLanguage : undefined}
-                        >
-                            <SelectItem key="en">{t('registerModal.english')}</SelectItem>
-                            <SelectItem key="es">{t('registerModal.spanish')}</SelectItem>
-                            <SelectItem style={{ opacity: 0.5 }} isReadOnly key="pt">{t('registerModal.portuguese')}</SelectItem>
-                            <SelectItem style={{ opacity: 0.5 }} isReadOnly key="fr">{t('registerModal.french')}</SelectItem>
-                        </Select>
-
-                        {registerFormik.values.hobbies.length > 0 && (
-                            <div className="flex flex-wrap gap-2 bg-gray-100 dark:bg-gray-800 p-2 rounded-md max-h-20 overflow-y-auto">
-                                {registerFormik.values.hobbies.map((hobby) => (
-                                    <span
-                                        key={hobby.value}
-                                        className="bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-full text-sm flex items-center"
-                                    >
-                                        {t(`hobbies.${hobby.value}`)}
-                                        <button
-                                            className="ml-2 text-xs"
-                                            type="button"
-                                            onClick={() => handleRemoveHobby(hobby.value)}
-                                        >
-                                            ✕
-                                        </button>
-                                    </span>
-                                ))}
-                            </div>
-                        )}
-
-                        <Tooltip
-                            showArrow
-                            isDisabled={registerFormik.values.hobbies.length < MAX_HOBBIES}
-                            content={registerFormik.touched.hobbies?.length === 0 ? t('registerModal.addAtLeastOneInterest') : t('registerModal.youCanAddUpTo', { max: MAX_HOBBIES })}
-                            placement="top"
-                        >
-                            <div className="mt-2">
-                                <Autocomplete
-                                    className="mb-2"
-                                    label={t('registerModal.interests')}
-                                    placeholder={t('registerModal.searchYourInterestsOrAddACustomOne')}
-                                    allowsCustomValue
-                                    onSelectionChange={(key) => handleSelectHobby(key as string)}
-                                    onClear={() => registerFormik.setFieldValue("hobbies", [])}
-                                    value={registerFormik.values.hobbies.map((hobby) => hobby.label)}
-                                    isDisabled={registerFormik.values.hobbies.length >= MAX_HOBBIES}
+                                <Select
+                                    label={t('registerModal.targetLanguage')}
+                                    placeholder={t('registerModal.selectYourTargetLanguage')}
+                                    className="mb-4"
+                                    name="targetLanguage"
+                                    multiple={false}
+                                    onSelectionChange={(key) => {
+                                        i18n.changeLanguage(key.currentKey === 'en' ? 'es' : 'en');
+                                        registerFormik.setFieldValue("targetLanguage", key.currentKey as string);
+                                    }}
+                                    onBlur={registerFormik.handleBlur}
+                                    isInvalid={!!(registerFormik.touched.targetLanguage && registerFormik.errors.targetLanguage)}
+                                    errorMessage={registerFormik.touched.targetLanguage && registerFormik.errors.targetLanguage ? registerFormik.errors.targetLanguage : undefined}
                                 >
-                                    {hobbies
-                                        .filter(
-                                            (hobby) =>
-                                                !registerFormik.values.hobbies.some(
-                                                    (selected) => selected.value === hobby.value
-                                                )
-                                        )
-                                        .map((hobby) => (
-                                            <AutocompleteItem key={hobby.value}>
-                                                {hobby.label}
-                                            </AutocompleteItem>
+                                    <SelectItem key="en">{t('registerModal.english')}</SelectItem>
+                                    <SelectItem key="es">{t('registerModal.spanish')}</SelectItem>
+                                    <SelectItem style={{ opacity: 0.5 }} isReadOnly key="pt">{t('registerModal.portuguese')}</SelectItem>
+                                    <SelectItem style={{ opacity: 0.5 }} isReadOnly key="fr">{t('registerModal.french')}</SelectItem>
+                                </Select>
+
+                                {registerFormik.values.hobbies.length > 0 && (
+                                    <div className="flex flex-wrap gap-2 bg-gray-100 dark:bg-gray-800 p-2 rounded-md max-h-20 overflow-y-auto">
+                                        {registerFormik.values.hobbies.map((hobby) => (
+                                            <span
+                                                key={hobby.value}
+                                                className="bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-full text-sm flex items-center"
+                                            >
+                                                {t(`hobbies.${hobby.value}`)}
+                                                <button
+                                                    className="ml-2 text-xs"
+                                                    type="button"
+                                                    onClick={() => handleRemoveHobby(hobby.value)}
+                                                >
+                                                    ✕
+                                                </button>
+                                            </span>
                                         ))}
-                                </Autocomplete>
-                            </div>
-                        </Tooltip>
-                        <Select
-                            label={t('registerModal.level')}
-                            placeholder={t('registerModal.selectYourLevel')}
-                            className="mt-2 mb-2"
-                            name="level"
-                            selectedKeys={[registerFormik.values.level]}
-                            onSelectionChange={(key) => {
-                                registerFormik.setFieldValue("level", key.currentKey as string);
-                            }}
-                            onBlur={registerFormik.handleBlur}
-                            isInvalid={!!(registerFormik.touched.level && registerFormik.errors.level)}
-                            errorMessage={registerFormik.touched.level && registerFormik.errors.level ? registerFormik.errors.level : undefined}
-                        >
-                            <SelectItem key={Level.Basic}>{t('registerModal.basic')}</SelectItem>
-                            <SelectItem key={Level.Intermediate}>{t('registerModal.intermediate')}</SelectItem>
-                            <SelectItem key={Level.Advanced}>{t('registerModal.advanced')}</SelectItem>
-                        </Select>
-                        <Button
-                            className="mt-2"
-                            type="submit"
-                            fullWidth
-                            isLoading={(isRegisterLoading || registerFormik.isSubmitting) && !registerError}
-                            isDisabled={
-                                !registerFormik.isValid ||
-                                registerFormik.values.hobbies.length === 0
-                            }
-                        >
-                            {t('register')}
-                        </Button>
-                        {registerError && <p className="text-red-500 text-sm mt-2">{t('registerModal.error')}</p>}
-                    </form>
-                </ModalBody>
+                                    </div>
+                                )}
+
+                                <Tooltip
+                                    showArrow
+                                    isDisabled={registerFormik.values.hobbies.length < MAX_HOBBIES}
+                                    content={registerFormik.touched.hobbies?.length === 0 ? t('registerModal.addAtLeastOneInterest') : t('registerModal.youCanAddUpTo', { max: MAX_HOBBIES })}
+                                    placement="top"
+                                >
+                                    <div className="mt-2">
+                                        <Autocomplete
+                                            className="mb-2"
+                                            label={t('registerModal.interests')}
+                                            placeholder={t('registerModal.searchYourInterestsOrAddACustomOne')}
+                                            allowsCustomValue
+                                            onSelectionChange={(key) => handleSelectHobby(key as string)}
+                                            onClear={() => registerFormik.setFieldValue("hobbies", [])}
+                                            value={registerFormik.values.hobbies.map((hobby) => hobby.label)}
+                                            isDisabled={registerFormik.values.hobbies.length >= MAX_HOBBIES}
+                                        >
+                                            {hobbies
+                                                .filter(
+                                                    (hobby) =>
+                                                        !registerFormik.values.hobbies.some(
+                                                            (selected) => selected.value === hobby.value
+                                                        )
+                                                )
+                                                .map((hobby) => (
+                                                    <AutocompleteItem key={hobby.value}>
+                                                        {hobby.label}
+                                                    </AutocompleteItem>
+                                                ))}
+                                        </Autocomplete>
+                                    </div>
+                                </Tooltip>
+                                <Select
+                                    label={t('registerModal.level')}
+                                    placeholder={t('registerModal.selectYourLevel')}
+                                    className="mt-2 mb-2"
+                                    name="level"
+                                    selectedKeys={[registerFormik.values.level]}
+                                    onSelectionChange={(key) => {
+                                        registerFormik.setFieldValue("level", key.currentKey as string);
+                                    }}
+                                    onBlur={registerFormik.handleBlur}
+                                    isInvalid={!!(registerFormik.touched.level && registerFormik.errors.level)}
+                                    errorMessage={registerFormik.touched.level && registerFormik.errors.level ? registerFormik.errors.level : undefined}
+                                >
+                                    <SelectItem key={Level.Basic}>{t('registerModal.basic')}</SelectItem>
+                                    <SelectItem key={Level.Intermediate}>{t('registerModal.intermediate')}</SelectItem>
+                                    <SelectItem key={Level.Advanced}>{t('registerModal.advanced')}</SelectItem>
+                                </Select>
+                                <Button
+                                    className="mt-2"
+                                    type="submit"
+                                    fullWidth
+                                    isLoading={(isRegisterLoading || registerFormik.isSubmitting) && !registerError}
+                                    isDisabled={
+                                        !registerFormik.isValid ||
+                                        registerFormik.values.hobbies.length === 0
+                                    }
+                                >
+                                    {t('register')}
+                                </Button>
+                                {registerError && <p className="text-red-500 text-sm mt-2">{t('registerModal.error')}</p>}
+                            </form>
+                        </ModalBody>
+                    </>
+                )}
             </Tab>
         </Tabs>
     );
 }
-

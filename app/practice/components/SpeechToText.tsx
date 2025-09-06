@@ -82,23 +82,23 @@ export default function SpeechToText({ phrase, audioSrc, onConfirm }: SpeechToTe
             <div className={`text-sm ${isRecording ? "text-red-600" : "text-gray-500"} text-center w-full`}>
                 {isRecording ? t("listening") : t("clickTheMic")}
             </div>
+            <div className="flex items-center gap-2 text-xs text-gray-500 text-justify">
+                If the text is not correct or your browser is not supporting the speech recognition, you can try again by clicking the mic and speaking the phrase or write the text you hear.
+            </div>
             <Textarea
                 label={t("yourSpeech")}
                 value={transcript}
-                readOnly
                 placeholder={t("yourSpokenText")}
+                onChange={(e) => setTranscript(e.target.value)}
             />
             <Button
                 onPress={handleVerify}
                 className="px-4 py-2 rounded light:bg-white dark:bg-black light:text-black dark:text-white"
                 fullWidth
-                isDisabled={!transcript}
+                isDisabled={!transcript.trim()}
             >
                 {t("verifyAnswer")}
             </Button>
-            <div className="mt-4 text-sm">
-                <span className="font-semibold dark:text-white light:text-black">{t("targetPhrase")}</span> "{phrase}"
-            </div>
         </div>
     );
 }

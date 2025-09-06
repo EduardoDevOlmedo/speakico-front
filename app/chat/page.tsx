@@ -108,6 +108,13 @@ const Chat = () => {
     const hasCards = messages[messages.length - 1]?.content.includes("cards:");
     
     if (!messages) return null; 
+
+    const KicoImage = () => {
+        return (
+            <Image src="/Speakico/KICO.png" alt="logo" width={80} height={80} />
+        )
+    }
+
     const renderResponse = () => {
         return (
             <div
@@ -131,7 +138,7 @@ const Chat = () => {
                         {m.role === "user" ? (
                             <UserIcon className="avatar w-6 h-6 text-blue-600 dark:text-blue-300" />
                         ) : (
-                            <Image src="/Speakico/KICO.png" alt="logo" width={80} height={80} />
+                            <KicoImage />
                         )}
 
                         <div
