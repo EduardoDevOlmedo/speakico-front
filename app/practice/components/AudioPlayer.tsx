@@ -1,55 +1,60 @@
+"use client";
+
 import { PauseIcon, SpeakerWaveIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { useRef, useState, useEffect } from "react";
 
 export default function AudioPlayer({ audioSrc }: { audioSrc: string }) {
-    const audioRef = useRef<HTMLAudioElement>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const unlockRef = useRef(false); // For mobile unlock
 
-    useEffect(() => {
-        const audio = audioRef.current;
-        if (!audio) return;
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
 
-        const handleEnded = () => {
-            setIsPlaying(false);
-        };
+    audioRef.current = new Audio(audioSrc);
+    audioRef.current.onended = () => setIsPlaying(false);
 
-        audio.addEventListener("ended", handleEnded);
-
-        return () => {
-            audio.removeEventListener("ended", handleEnded);
-        };
-    }, [audioSrc]);
-
-    const handlePlayAudio = () => {
-        if (isPlaying) {
-            audioRef.current?.pause();
-            setIsPlaying(false);
-            return;
-        }
-        if (audioRef.current) {
-            audioRef.current.currentTime = 0;
-            audioRef.current.play();
-            setIsPlaying(true);
-        }
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.onended = null;
+      }
     };
+  }, [audioSrc]);
 
-    return (
-        <>
-            <audio
-                ref={audioRef}
-                src={audioSrc}
-                style={{ display: "none" }}
-            />
-            <Button
-                isIconOnly
-                onPress={handlePlayAudio}
-                color="secondary"
-                className="flex items-center gap-2 rounded"
-                aria-label="Play audio"
-            >
-                {isPlaying ? <PauseIcon className="w-6 h-6" /> : <SpeakerWaveIcon className="w-6 h-6" />}
-            </Button>
-        </>
-    );
+  const handlePlayAudio = () => {
+    if (!audioRef.current) return;
+
+    if (!unlockRef.current) {
+      audioRef.current.play().catch(() => {
+      });
+      unlockRef.current = true;
+    }
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(console.error);
+      setIsPlaying(true);
+    }
+  };
+
+  return (
+    <Button
+      isIconOnly
+      onPress={handlePlayAudio}
+      color="secondary"
+      className="flex items-center gap-2 rounded"
+      aria-label="Play audio"
+    >
+      {isPlaying ? <PauseIcon className="w-6 h-6" /> : <SpeakerWaveIcon className="w-6 h-6" />}
+    </Button>
+  );
 }
