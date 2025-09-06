@@ -3,7 +3,8 @@
         "practice": "Practice",
         "chat": "Chat",
         "dashboard": "Dashboard",
-        "cards": "Cards"
+        "cards": "Cards",
+        "logout": "Logout"
     },
     "home": {
         "title": "Learn a language like a native",
@@ -105,7 +106,7 @@
             "intermediate": "Intermediate",
             "advanced": "Advanced",
             "selectYourTargetLanguage": "Select your target language",
-            "searchYourInterestsOrAddACustomOne": "Search your interests or add a custom one!",
+            "searchYourInterestsOrAddACustomOne": "Select some interests",
             "selectYourLevel": "Select your level",
             "addAtLeastOneInterest": "Add at least one interest",
             "youCanAddUpTo": "You can add up to {{max}} interests"

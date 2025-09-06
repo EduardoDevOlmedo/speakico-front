@@ -32,6 +32,9 @@ function DraggableWord({ word, index, moveWord }: { word: string, index: number,
         dragRef(node);
         dropRef(node);
       }}
+      style={{
+        userSelect: "none",
+      }}
       className={`px-4 py-2 cursor-move transition ${isDragging ? "opacity-50" : "opacity-100"}`}
     >
       {word}

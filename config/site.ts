@@ -2,7 +2,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "SpeaKico",
-  description: "Chatbot para aprender idiomas con IA",
+  description: "Your AI powered language learning platform",
   navItems: [
     {
       label: "nav.practice",

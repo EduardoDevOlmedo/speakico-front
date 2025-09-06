@@ -10,89 +10,100 @@ import { Level } from "@/actions/auth.entity";
 import { useLoginMutation } from "./useLoginMutation";
 import { useRegisterMutation } from "@/components/auth/useRegisterMutation";
 import { useHobbies } from "./useHobbies";
+import Input from "./components/Input";
+import { Button } from "@heroui/button";
+import { Select, SelectItem } from "@heroui/select";
 
 const MAX_HOBBIES = 5;
 
 
 interface Hobby {
-  label: string;
-  value: string;
+    label: string;
+    value: string;
 }
 
 interface Props {
-  hobbies: Hobby[];
-  maxHobbies?: number;
-  selectedHobbies: Hobby[];
-  setSelectedHobbies: (h: Hobby[]) => void;
+    hobbies: Hobby[];
+    maxHobbies?: number;
+    selectedHobbies: Hobby[];
+    setSelectedHobbies: (h: Hobby[]) => void;
 }
 
 export const SingleSelectHobbies = ({
-  hobbies,
-  maxHobbies = 5,
-  selectedHobbies,
-  setSelectedHobbies,
+    hobbies,
+    maxHobbies = 5,
+    selectedHobbies,
+    setSelectedHobbies,
 }: Props) => {
-  const [selectedValue, setSelectedValue] = useState("");
+    const [selectedValue, setSelectedValue] = useState("");
+    const { t } = useTranslation("common", { keyPrefix: "auth.registerModal" });
 
-  const handleSelect = (value: string) => {
-    const hobby = hobbies.find((h) => h.value === value);
-    if (!hobby) return;
-    if (!selectedHobbies.find((h) => h.value === value) && selectedHobbies.length < maxHobbies) {
-      setSelectedHobbies([...selectedHobbies, hobby]);
-    }
-    setSelectedValue(""); // reset select
-  };
+    const handleSelect = (value: string) => {
+        const hobby = hobbies.find((h) => h.value === value);
+        if (!hobby) return;
+        if (!selectedHobbies.find((h) => h.value === value) && selectedHobbies.length < maxHobbies) {
+            setSelectedHobbies([...selectedHobbies, hobby]);
+        }
+        setSelectedValue(""); // reset select
+    };
 
-  const removeHobby = (value: string) => {
-    setSelectedHobbies(selectedHobbies.filter((h) => h.value !== value));
-  };
+    const removeHobby = (value: string) => {
+        setSelectedHobbies(selectedHobbies.filter((h) => h.value !== value));
+    };
 
-  return (
-    <div className="w-full">
-      {/* Selected tags */}
-      <div className="flex flex-wrap gap-2 p-2 border rounded-md bg-white dark:bg-gray-800 mb-2">
-        {selectedHobbies.length === 0 && <span className="text-gray-500">Select hobbies...</span>}
-        {selectedHobbies.map((hobby) => (
-          <span
-            key={hobby.value}
-            className="bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-full flex items-center"
-          >
-            {hobby.label}
-            <button
-              type="button"
-              onClick={() => removeHobby(hobby.value)}
-              className="ml-1 text-xs"
+    return (
+        <div className="w-full">
+            {/* Selected tags */}
+            {selectedHobbies.length === 0 && (
+                <p className="text-sm text-gray-500 mb-2 text-warning">{t("addAtLeastOneInterest")}</p>
+            )}
+            <div className="flex flex-wrap gap-2 bg-default-100  p-2 rounded-medium min-h-14  mb-4">
+                {selectedHobbies.map((hobby) => (
+                    <span
+                        key={hobby.value}
+                        className="bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-full text-sm flex items-center max-h-8"
+                    >
+                        {hobby.label}
+                        <Button
+                            type="button"
+                            variant="light"
+                            onPress={() => removeHobby(hobby.value)}
+                            className="ml-1 text-xs min-w-2 rounder-medium h-6 p-2"
+                        >
+                            ✕
+                        </Button>
+                    </span>
+                ))}
+            </div>
+
+            {/* Normal select */}
+            <select
+                value={selectedValue}
+                onChange={(e) => handleSelect(e.target.value)}
+                className="custom-select "
+                disabled={selectedHobbies.length >= maxHobbies}
+                style={{
+                    opacity: selectedHobbies.length >= maxHobbies ? 0.5 : 1,
+                }}
             >
-              ✕
-            </button>
-          </span>
-        ))}
-      </div>
+                <option value="">{t("searchYourInterestsOrAddACustomOne")}</option>
+                {hobbies
+                    .filter((h) => !selectedHobbies.find((s) => s.value === h.value))
+                    .map((hobby) => (
+                        <option key={hobby.value} value={hobby.value}>
+                            {hobby.label}
+                        </option>
+                    ))}
+            </select>
 
-      {/* Normal select */}
-      <select
-        value={selectedValue}
-        onChange={(e) => handleSelect(e.target.value)}
-        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
-        disabled={selectedHobbies.length >= maxHobbies}
-      >
-        <option value="">-- Select a hobby --</option>
-        {hobbies
-          .filter((h) => !selectedHobbies.find((s) => s.value === h.value))
-          .map((hobby) => (
-            <option key={hobby.value} value={hobby.value}>
-              {hobby.label}
-            </option>
-          ))}
-      </select>
+            {selectedHobbies.length >= maxHobbies && (
+                <p className="text-warning text-sm mt-1">
+                    {t("youCanAddUpTo", { max: maxHobbies })}
+                </p>
+            )}
 
-      {selectedHobbies.length >= maxHobbies && (
-        <p className="text-red-500 text-sm mt-1">
-          You can select up to {maxHobbies} hobbies
-        </p>
-      )}
-    </div>
-  );
+        </div>
+    );
 };
 
 
@@ -118,7 +129,9 @@ export const LoginModal = () => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-auto p-6">
+            <div className="bg-white dark:bg-content1 rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-auto px-2
+            flex flex-col relative z-50 w-full box-border bg-content1 outline-solid outline-transparent mx-1 my-1 sm:mx-6 sm:my-16 max-w-md rounded-large shadow-small overflow-y-hidden
+            ">
                 <AuthTabs />
             </div>
         </div>
@@ -214,19 +227,29 @@ function AuthTabs() {
     };
 
     return (
-        <div ref={tabRef}>
+        <div ref={tabRef} style={{
+            overflowY: "auto",
+        }}>
             {/* Tabs */}
-            <div className="flex mb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex mb-4">
                 <button
-                    className={`flex-1 py-2 text-center font-semibold ${tab === "login" ? "border-b-2 border-blue-500 dark:border-blue-400" : "text-gray-500 dark:text-gray-400"
+                    className={`px-2 py-2 text-center ${tab === "login" ? "border-b-2 border-black dark:border-white" : "text-gray-500 dark:text-gray-400"
                         }`}
+                    style={{
+                        opacity: tab === "login" ? 1 : 0.75,
+                        fontSize: "0.85rem"
+                    }}
                     onClick={() => setTab("login")}
                 >
                     {t("login")}
                 </button>
                 <button
-                    className={`flex-1 py-2 text-center font-semibold ${tab === "register" ? "border-b-2 border-blue-500 dark:border-blue-400" : "text-gray-500 dark:text-gray-400"
+                    className={`px-2 py-2 text-center ${tab === "register" ? "border-b-2 border-black dark:border-white" : "text-gray-500 dark:text-gray-400"
                         }`}
+                    style={{
+                        opacity: tab === "register" ? 1 : 0.75,
+                        fontSize: "0.85rem"
+                    }}
                     onClick={() => setTab("register")}
                 >
                     {t("register")}
@@ -235,128 +258,88 @@ function AuthTabs() {
 
             {/* Login Form */}
             {tab === "login" && (
-                <form onSubmit={loginFormik.handleSubmit} className="space-y-4">
-                    <input
-                        type="email"
-                        name="email"
-                        value={loginFormik.values.email}
-                        onChange={loginFormik.handleChange}
-                        onBlur={loginFormik.handleBlur}
-                        onFocus={scrollIntoViewOnFocus}
-                        placeholder={t("loginModal.email")}
-                        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
-                    />
-                    <input
-                        type="password"
-                        name="password"
-                        value={loginFormik.values.password}
-                        onChange={loginFormik.handleChange}
-                        onBlur={loginFormik.handleBlur}
-                        onFocus={scrollIntoViewOnFocus}
-                        placeholder={t("loginModal.password")}
-                        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
-                    />
-                    <button
-                        type="submit"
-                        disabled={!loginFormik.isValid || isLoginLoading}
-                        className="w-full py-2 bg-blue-500 text-white rounded-md disabled:opacity-50 dark:bg-blue-600"
+                <>
+                    <h4
+                        className="text-md font-bold mb-4 px-4"
                     >
-                        {isLoginLoading ? "..." : t("login")}
-                    </button>
-                    {isLoginError && <p className="text-red-500 text-sm">{t("loginModal.error")}</p>}
-                </form>
+                        {t("loginModal.welcome")}
+                    </h4>
+                    <form onSubmit={loginFormik.handleSubmit} className="space-y-4 px-4 pb-4">
+                        <Input formik={loginFormik} placeholder={t("loginModal.email")} name="email" type="email" />
+                        <Input formik={loginFormik} placeholder={t("loginModal.password")} name="password" type="password" />
+                        <Button fullWidth className="mt-2 mb-2" type="submit" isDisabled={!loginFormik.isValid} isLoading={isLoginLoading || loginFormik.isSubmitting && !isLoginError} >
+                            {t('login')}
+                        </Button>
+                        {isLoginError && <p className="text-red-500 text-sm">{t('loginModal.error')}</p>}
+                    </form>
+                </>
             )}
 
             {/* Register Form */}
             {tab === "register" && (
-                <form onSubmit={registerFormik.handleSubmit} className="space-y-4">
-                    <input
-                        type="email"
-                        name="email"
-                        value={registerFormik.values.email}
-                        onChange={registerFormik.handleChange}
-                        onBlur={registerFormik.handleBlur}
-                        onFocus={scrollIntoViewOnFocus}
-                        placeholder={t("registerModal.email")}
-                        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
-                    />
-                    <input
-                        type="text"
-                        name="name"
-                        value={registerFormik.values.name}
-                        onChange={registerFormik.handleChange}
-                        onBlur={registerFormik.handleBlur}
-                        onFocus={scrollIntoViewOnFocus}
-                        placeholder={t("registerModal.name")}
-                        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
-                    />
-                    <input
-                        type="password"
-                        name="password"
-                        value={registerFormik.values.password}
-                        onChange={registerFormik.handleChange}
-                        onBlur={registerFormik.handleBlur}
-                        onFocus={scrollIntoViewOnFocus}
-                        placeholder={t("registerModal.password")}
-                        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
-                    />
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        value={registerFormik.values.confirmPassword}
-                        onChange={registerFormik.handleChange}
-                        onBlur={registerFormik.handleBlur}
-                        onFocus={scrollIntoViewOnFocus}
-                        placeholder={t("registerModal.confirmPassword")}
-                        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
-                    />
-
-                    {/* Target Language */}
-                    <select
-                        value={registerFormik.values.targetLanguage}
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            i18n.changeLanguage(val === "en" ? "es" : "en");
-                            registerFormik.setFieldValue("targetLanguage", val);
-                        }}
-                        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
+                <>
+                    <h4
+                        className="text-md font-bold mb-4 px-4"
                     >
-                        <option value="en">{t("registerModal.english")}</option>
-                        <option value="es">{t("registerModal.spanish")}</option>
-                    </select>
+                        {t("registerModal.welcome")}
+                    </h4>
+                    <form onSubmit={registerFormik.handleSubmit} className="space-y-4 px-4 pb-4">
+                        <Input formik={registerFormik} placeholder={t("registerModal.email")} name="email" type="email" />
+                        <Input formik={registerFormik} placeholder={t("registerModal.name")} name="name" type="text" />
+                        <Input formik={registerFormik} placeholder={t("registerModal.password")} name="password" type="password" />
+                        <Input formik={registerFormik} placeholder={t("registerModal.confirmPassword")} name="confirmPassword" type="password" />
+                        {/* Target Language */}
+                        <Select
+                            label={t("registerModal.targetLanguage")}
+                            name="targetLanguage"
+                            value={registerFormik.values.targetLanguage}
+                            onSelectionChange={(e) => {
+                                const val = e.currentKey;
+                                i18n.changeLanguage(val === "en" ? "es" : "en");
+                                registerFormik.setFieldValue("targetLanguage", val);
+                            }}
+                            className="
+                            w-full inline-flex tap-highlight-transparent shadow-xs bg-default-100 data-[hover=true]:bg-default-200 
+                            group-data-[focus=true]:bg-default-100 rounded-medium flex-col items-start justify-center gap-0 
+                            transition-background motion-reduce:transition-none !duration-150 outline-solid outline-transparent group-data-[focus-visible=true]:z-10 
+                            h-14
+                            "
+                        >
+                            <SelectItem key="en">{t("registerModal.english")}</SelectItem>
+                            <SelectItem key="es">{t("registerModal.spanish")}</SelectItem>
+                        </Select>
 
-                    {/* Hobbies */}
-                    <div className="flex flex-col gap-2">
-                        <SingleSelectHobbies
-                            hobbies={hobbies}
-                            maxHobbies={MAX_HOBBIES}
-                            selectedHobbies={registerFormik.values.hobbies}
-                            setSelectedHobbies={(hobbies: Hobby[]) => registerFormik.setFieldValue("hobbies", hobbies)}
-                        />
-                    </div>
+                        {/* Hobbies */}
+                        <div className="flex flex-col gap-2">
+                            <SingleSelectHobbies
+                                hobbies={hobbies}
+                                maxHobbies={MAX_HOBBIES}
+                                selectedHobbies={registerFormik.values.hobbies}
+                                setSelectedHobbies={(hobbies: Hobby[]) => registerFormik.setFieldValue("hobbies", hobbies)}
+                            />
+                        </div>
 
 
-                    {/* Level */}
-                    <select
-                        value={registerFormik.values.level}
-                        onChange={(e) => registerFormik.setFieldValue("level", e.target.value)}
-                        className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600"
-                    >
-                        <option value={Level.Basic}>{t("registerModal.basic")}</option>
-                        <option value={Level.Intermediate}>{t("registerModal.intermediate")}</option>
-                        <option value={Level.Advanced}>{t("registerModal.advanced")}</option>
-                    </select>
+                        {/* Level */}
+                        <select
+                            value={registerFormik.values.level}
+                            onChange={(e) => registerFormik.setFieldValue("level", e.target.value)}
+                            className="custom-select "
+                        >
+                            {Object.values(Level)
+                                .map((level) => (
+                                    <option key={level} value={level}>
+                                        {t(`registerModal.${level}`)}
+                                    </option>
+                                ))}
+                        </select>
 
-                    <button
-                        type="submit"
-                        disabled={!registerFormik.isValid || registerFormik.values.hobbies.length === 0 || isRegisterLoading}
-                        className="w-full py-2 bg-blue-500 text-white rounded-md disabled:opacity-50 dark:bg-blue-600"
-                    >
-                        {isRegisterLoading ? "..." : t("register")}
-                    </button>
-
-                    {registerError && <p className="text-red-500 text-sm">{t("registerModal.error")}</p>}
-                </form>
+                        <Button fullWidth className="mt-2 mb-2" type="submit" isDisabled={!registerFormik.isValid || registerFormik.values.hobbies.length === 0} isLoading={isRegisterLoading || registerFormik.isSubmitting && !registerError} >
+                            {t('register')}
+                        </Button>
+                        {registerError && <p className="text-red-500 text-sm">{t("registerModal.error")}</p>}
+                    </form>
+                </>
             )}
         </div>
     );

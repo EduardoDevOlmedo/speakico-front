@@ -21,7 +21,7 @@ import { Button } from "@heroui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Fragment } from "react";
 
 
 export const Navbar = () => {
@@ -86,26 +86,25 @@ export const Navbar = () => {
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
         <NavbarMenuToggle />
+        <Button isIconOnly variant="ghost" onPress={logout}>
+          <ArrowLeftEndOnRectangleIcon className="w-6 h-6" />
+        </Button>
       </NavbarContent>
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {navItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === navItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href={item.href}
-                size="lg"
-              >
-                {t(item.label)}
-              </Link>
-            </NavbarMenuItem>
+            <Fragment key={`${item}-${index}`}>
+              <NavbarMenuItem key={`${item}-${index}`}>
+                <Link
+                  color="foreground"
+                  href={item.href}
+                  size="lg"
+                >
+                  {t(item.label)}
+                </Link>
+              </NavbarMenuItem>
+            </Fragment>
           ))}
         </div>
       </NavbarMenu>
