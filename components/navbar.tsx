@@ -19,7 +19,6 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/button";
 import { useAuthStore } from "@/store/useAuthStore";
-import logo from "../public/SpeaKico/logo SpeaKico.png";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState, useMemo } from "react";
@@ -63,7 +62,7 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Image src={logo} alt="SpeaKico" width={60} height={60} className="relative z-10" />
+            <Image src="/SpeaKico/logo SpeaKico.png" alt="SpeaKico" width={60} height={60} className="relative z-10" />
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">

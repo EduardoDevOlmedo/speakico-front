@@ -3,14 +3,10 @@ import { Link } from "@heroui/link";
 import { button as buttonStyles } from "@heroui/theme";
 import { title, subtitle } from "@/components/primitives";
 import Image from "next/image";
-import speakico from "../public/SpeaKico/KICO BIRD 2.png";
-import feather from "../public/SpeaKico/alita.png";
 import { useTranslation } from 'react-i18next';
 
 export default function Home() {
-  const { t } = useTranslation();
-
-
+  const { t } = useTranslation('common', { keyPrefix: '' });
 
   return (
     <main className="flex flex-col items-center justify-center px-4 py-30">
@@ -27,8 +23,8 @@ export default function Home() {
         </h1>
         <div className="flex justify-center m-4">
           <div className="relative">
-            <Image src={speakico} alt="SpeaKico" width={100} height={100} className="relative z-10" />
-            <Image src={feather} alt="Feather" width={100} height={100} className="absolute top-1 left-15 z-5 rotate-2 feather-animation" />
+            <Image src="/SpeaKico/KICO BIRD 2.png" alt="SpeaKico" width={100} height={100} className="relative z-10" />
+            <Image src="/SpeaKico/alita.png" alt="Feather" width={100} height={100} className="absolute top-1 left-15 z-5 rotate-2 feather-animation" />
           </div>
         </div>
         <p

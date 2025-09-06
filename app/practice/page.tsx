@@ -10,8 +10,6 @@ import Link from "next/link";
 import { useUpdateUser } from "./actions/useUpdate";
 import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
-import happy from "../../public/SpeaKico/happy kico.png"
-import angry from "../../public/SpeaKico/angry kico.png"
 import { useTranslation } from "react-i18next";
 import { checkGrammar } from "@/app/api/grammar/grammar-check";
 import { mapGrammarCheckResponse } from "./utils";
@@ -34,7 +32,7 @@ const IncorrectToast = ({  mostSimilar, incorrectWord }: { mostSimilar?: string,
     const { t } = useTranslation('common', { keyPrefix: 'practice' });
     return (
         <div className="flex items-center">
-            <Image src={angry} alt="Angry" width={85} height={85} />
+            <Image src="/SpeaKico/angry kico.png" alt="Angry" width={85} height={85} />
             <div className="flex flex-col">
                 {t("toasts.incorrect")}
                 {incorrectWord && mostSimilar && <p className="text-sm mt-2">{t("toasts.hint")} <span className="font-bold">{incorrectWord}</span> {t("toasts.for")} <span className="font-bold">{mostSimilar}</span></p>}
@@ -47,7 +45,7 @@ const CorrectToast = () => {
     const { t } = useTranslation('common', { keyPrefix: 'practice' });
     return (
         <div className="flex items-center">
-            <Image src={happy} alt="Happy" width={85} height={85} />
+            <Image src="/SpeaKico/happy kico.png" alt="Happy" width={85} height={85} />
             {t("toasts.correct")}
         </div>
     )

@@ -11,7 +11,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useUpdateUser } from "../practice/actions/useUpdate";
 import { addToast } from "@heroui/toast";
 import Image from "next/image";
-import speakico from "../../public/Speakico/KICO.png";
 import { useTranslation } from "react-i18next";
 import { useMessageStore } from "./useMessageStore";
 import { Tooltip } from "@heroui/tooltip";
@@ -132,7 +131,7 @@ const Chat = () => {
                         {m.role === "user" ? (
                             <UserIcon className="avatar w-6 h-6 text-blue-600 dark:text-blue-300" />
                         ) : (
-                            <Image src={speakico} alt="logo" width={80} height={80} />
+                            <Image src="/Speakico/KICO.png" alt="logo" width={80} height={80} />
                         )}
 
                         <div
