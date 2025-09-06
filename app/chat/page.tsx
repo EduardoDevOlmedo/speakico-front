@@ -106,12 +106,12 @@ const Chat = () => {
     }
 
     const hasCards = messages[messages.length - 1]?.content.includes("cards:");
-    
-    if (!messages) return null; 
+
+    if (!messages) return null;
 
     const KicoImage = () => {
         return (
-            <Image src="/Speakico/KICO.png" alt="logo" width={80} height={80} />
+            <img src="/SpeaKico/KICO.png" alt="logo" width={80} height={80} />
         )
     }
 

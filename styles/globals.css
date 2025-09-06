@@ -35,5 +35,7 @@ html[style="color-scheme: light;"] .slick-dots li button:before {
   color: rgba(0, 0, 0, 0.5) !important;
 }
 
+div[data-slot="wrapper"] {
+}
 
 @config "../tailwind.config.js"
