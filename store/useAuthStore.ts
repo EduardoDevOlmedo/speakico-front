@@ -4,9 +4,10 @@ import { persist } from 'zustand/middleware';
 
 interface AuthStore {
   user: User | null;
+  language: string;
+  hydrated: boolean;
   setUser: (user: User) => void;
   logout: () => void;
-  language: string;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -14,16 +15,19 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       language: 'en',
       user: null,
+      hydrated: false,
       setUser: (user: User) => set({ user }),
       logout: () => {
         set({ user: null });
         localStorage.removeItem('cards');
         localStorage.removeItem('message-storage');
-        location.replace('/');
       },
     }),
     {
       name: 'auth-storage', 
+      onRehydrateStorage: () => (state) => {
+        state!.hydrated = true;
+      },
     }
   )
 );

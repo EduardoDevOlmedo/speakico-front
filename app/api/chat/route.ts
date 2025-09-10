@@ -81,16 +81,11 @@ export async function POST(req: Request) {
   - Use clear, natural ${targetLanguageText} but keep ${targetLanguageText} questions authentic and simple.
   `
 
-  console.log("prompt", prompt);
-
   const result = await streamText({
     model: google("gemini-1.5-flash"),
     system: prompt,
     messages: messages,
   });
-
-  console.log(messages);
-
 
   return result.toDataStreamResponse();
 }

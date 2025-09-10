@@ -13,6 +13,7 @@ import { useHobbies } from "./useHobbies";
 import Input from "./components/Input";
 import { Button } from "@heroui/button";
 import { Select, SelectItem } from "@heroui/select";
+import { checkToken } from "@/actions/auth";
 
 const MAX_HOBBIES = 5;
 
@@ -110,20 +111,33 @@ export const SingleSelectHobbies = ({
 
 
 export const LoginModal = () => {
-    const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
-    const { user } = useAuthStore();
-    const token = user?.token;
+    const [isOpen, setIsOpen] = useState(false);
+    const token = useAuthStore((state) => state.user?.token);
+    const hydrated = useAuthStore((state) => state.hydrated);
 
     useEffect(() => {
-        if (token) {
-            setIsOpen(false);
-            const targetUrl = location.pathname === "/" ? "/" : location.pathname;
-            router.replace(targetUrl);
-        } else {
-            setIsOpen(true);
-        }
-    }, [token]);
+        if (!hydrated) return; 
+
+        const validateTokenFn = async () => {
+            if (!token) {
+                setIsOpen(true);
+                router.replace("/");
+                return;
+            }
+
+            const isValid = await checkToken(token);
+            console.log("isValid", isValid);
+            if (!isValid) {
+                setIsOpen(true);
+                router.replace("/");
+            } else {
+                setIsOpen(false);
+            }
+        };
+
+        validateTokenFn();
+    }, [token, hydrated, router]);
 
     if (!isOpen) return null;
 
@@ -146,13 +160,6 @@ function AuthTabs() {
     const { mutate: loginUser, isLoading: isLoginLoading, hasError: isLoginError } = useLoginMutation();
     const { registerUser, isRegisterLoading, error: registerError } = useRegisterMutation();
     const tabRef = useRef<HTMLDivElement>(null);
-
-    // Scroll input into view on focus
-    const scrollIntoViewOnFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-        setTimeout(() => {
-            e.target.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 300);
-    };
 
     const loginFormik = useFormik({
         initialValues: { email: "", password: "" },
