@@ -107,9 +107,6 @@ export const SingleSelectHobbies = ({
     );
 };
 
-
-
-
 export const LoginModal = () => {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
@@ -127,7 +124,6 @@ export const LoginModal = () => {
             }
 
             const isValid = await checkToken(token);
-            console.log("isValid", isValid);
             if (!isValid) {
                 setIsOpen(true);
                 router.replace("/");
@@ -217,22 +213,6 @@ function AuthTabs() {
             );
         },
     });
-
-    const handleSelectHobby = (key: string) => {
-        const hobby = hobbies.find((h) => h.value === key);
-        if (!hobby) return;
-        if (!registerFormik.values.hobbies.some((h) => h.value === key) && registerFormik.values.hobbies.length < MAX_HOBBIES) {
-            registerFormik.setFieldValue("hobbies", [...registerFormik.values.hobbies, hobby]);
-        }
-    };
-
-    const handleRemoveHobby = (value: string) => {
-        registerFormik.setFieldValue(
-            "hobbies",
-            registerFormik.values.hobbies.filter((h) => h.value !== value)
-        );
-    };
-
     return (
         <div ref={tabRef} style={{
             overflowY: "auto",

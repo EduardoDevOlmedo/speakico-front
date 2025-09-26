@@ -16,6 +16,7 @@ import { useMessageStore } from "./useMessageStore";
 import { Tooltip } from "@heroui/tooltip";
 
 const SAVE_FACTOR_INTERVAL = 2;
+const CARDS_KEY = 'cards:';
 
 const Chat = () => {
     const { t } = useTranslation('common', { keyPrefix: 'chat' });
@@ -74,7 +75,7 @@ const Chat = () => {
         : undefined;
 
     useEffect(() => {
-        const cardsMatch = messages[messages.length - 1]?.content.match(/cards:\s*(\[[\s\S]*\])/);
+        const cardsMatch = messages[messages.length - 1]?.content.match(new RegExp(`${CARDS_KEY}\\s*(\\[[\\s\\S]*\\])`));
         if (cardsMatch) {
             const sanitizedCards: string = cardsMatch[1];
             localStorage.setItem("cards", JSON.stringify(sanitizedCards));
@@ -105,7 +106,7 @@ const Chat = () => {
         }
     }
 
-    const hasCards = messages[messages.length - 1]?.content.includes("cards:");
+    const hasCards = messages[messages.length - 1]?.content.includes(CARDS_KEY);
 
     if (!messages) return null;
 
@@ -147,7 +148,7 @@ const Chat = () => {
                                     ? <Spinner />
                                     : error
                                         ? <div className="text-red-500">Error: {error.message}</div>
-                                        : m.content.split("FEEDBACK (DEV INTERNAL):")[0].split("cards:")[0]}
+                                        : m.content.split("FEEDBACK (DEV INTERNAL):")[0].split(CARDS_KEY)[0]}
 
                             {index === messages.length - 1 && m.role !== "user" && !isLoading && (
                                 <div className="space-y-2 mt-4">
