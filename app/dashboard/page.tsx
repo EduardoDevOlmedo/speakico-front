@@ -3,6 +3,7 @@ import { Card, CardHeader, CardBody } from "@heroui/card";
 import { useAuthStore } from "@/store/useAuthStore";
 import { DocumentTextIcon, MicrophoneIcon, SpeakerWaveIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "react-i18next";
+import { Spinner } from "@heroui/spinner";
 
 const statCards = [
     {
@@ -39,7 +40,7 @@ const LanguageHashmap = {
 }
 
 export default function Dashboard() {
-    const { user } = useAuthStore();
+    const { user, hydrated } = useAuthStore();
     const { t } = useTranslation('common', { keyPrefix: 'dashboard' });
     // Calculate average success rate
     const rates = [
@@ -68,7 +69,7 @@ export default function Dashboard() {
     return (
         <div className="py-4 px-4">
             <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white ">
-                Hello, {user?.name}
+                Hello, {user?.name ?? t("loading")}
             </h1>
             {/* 2 cards in a row on md, 1 per row on sm */}
             <div className="mb-8 mt-10 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -88,7 +89,7 @@ export default function Dashboard() {
                         <CardBody>
                             <div className="text-4xl font-bold text-gray-800 dark:text-gray-100 text-center">
                                 {/* @ts-ignore */}
-                                {formatRate(user?.[card.key])}
+                                {formatRate(user?.[card.key] ?? 0)}
                             </div>
                         </CardBody>
                     </Card>
@@ -112,7 +113,7 @@ export default function Dashboard() {
                         <CardBody>
                             <div className="text-4xl font-bold text-gray-800 dark:text-gray-100 text-center">
                                 {/* @ts-ignore */}
-                                {formatRate(user?.[card.key])}
+                                {formatRate(user?.[card.key] ?? 0)}
                             </div>
                         </CardBody>
                     </Card>
@@ -128,7 +129,7 @@ export default function Dashboard() {
                     </CardHeader>
                     <CardBody>
                         <div className="text-3xl font-bold text-gray-800 dark:text-white text-center">
-                            {formatNumber(user?.totalAttempts)}
+                            {formatNumber(user?.totalAttempts ?? 0)}
                         </div>
                     </CardBody>
                 </Card>
@@ -141,7 +142,7 @@ export default function Dashboard() {
                     </CardHeader>
                     <CardBody>
                         <div className="flex gap-2 justify-center flex-wrap">
-                            {Array.isArray(interests) && interests.length > 0 ? (
+                            {Array.isArray(interests) && interests.length > 0 && hydrated ? (
                                 interests.map((interest: string, idx: number) => (
                                     <span
                                         key={idx}
@@ -180,7 +181,7 @@ export default function Dashboard() {
                     </CardHeader>
                     <CardBody>
                         <div className="text-3xl font-bold text-gray-800 dark:text-white text-center">
-                            {user?.prevFeedback ? user?.prevFeedback : t("noFeedback")}
+                            {hydrated ? user?.prevFeedback ?? t("noFeedback") : <Spinner />}
                         </div>
                     </CardBody>
                 </Card>
