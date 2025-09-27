@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: 'auth-storage', 
+      name: 'auth-storage',
       onRehydrateStorage: () => (state) => {
         state!.hydrated = true;
       },

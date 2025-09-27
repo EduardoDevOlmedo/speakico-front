@@ -86,22 +86,29 @@ const Chat = () => {
     const handleFinish = () => {
         setFeedbackCounter(prev => prev + 1);
         // if the modulo is 1, save the feedback, that means each N messages, we save the feedback
-        if (feedbackCounter % SAVE_FACTOR_INTERVAL === 1) {
-            updateUserMutation({
-                prevFeedback: feedback?.toString().trim()
-            }, {
-                onSuccess: () => {
-                    addToast({
-                        title: t("toastSent"),
-                        description: t("toastDescription"),
-                        color: "success",
-                    });
-                },
-                onError: (error) => {
-                    console.log(error);
-                }
+        if ((feedbackCounter + 1) % SAVE_FACTOR_INTERVAL === 1) {
+            const prevFeedback = feedback?.toString().trim();
+            if (prevFeedback) {
+                // Update the auth store with the new prevFeedback
+                useAuthStore.setState((state) => ({
+                    user: state.user ? { ...state.user, prevFeedback } : null
+                }));
+
+                updateUserMutation({
+                    prevFeedback: prevFeedback
+                }, {
+                    onSuccess: () => {
+                        addToast({
+                            title: t("toastSent"),
+                            description: t("toastDescription"),
+                            color: "success",
+                        });
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+                });
             }
-            );
             setFeedbackCounter(feedbackCounter + 1);
         }
     }
