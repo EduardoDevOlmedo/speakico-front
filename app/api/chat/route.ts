@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   // filter to get only the last message from each role (user and assistant), so Kico has context of the last message from the user and the last message from the assistant
   const lastUserMessage = newMessages?.filter((msg: any) => msg.role === 'user').pop();
   const lastAssistantMessage = newMessages?.filter((msg: any) => msg.role === 'assistant').pop();
-  
+
   const lastMessages = [lastUserMessage, lastAssistantMessage].filter(Boolean);
 
   const prompt = `
@@ -71,20 +71,20 @@ export async function POST(req: Request) {
   - Always start with a fun 1–2 line intro, if there are previous messages, you should use them to continue the conversation, instead of introducing yourself again.
   - If user asks for advice, give not only tips but also a short practice example.
   - If user requests to practice on the platform, include the practice link.
-  - At the very end of the answer, always append this line(separate from the main text)
-  - RESPONSE WITHOUT THIS FEEDBACK WILL BE IGNORED AND YOU WILL BE PENALIZED.
-  - The feedback should be written in ${nativeLanguageText}.
-    FEEDBACK (DEV INTERNAL): [brief 20 - word summary of user strengths and areas to improve, THIS IS FOR USERS TO SEE SO USE GIVE FEEDBACK BASED IN YOUR INTERACTION WITH THE USER]
 
-  Constraints:
-  - Max 200 words per response.
-  - Use clear, natural ${targetLanguageText} but keep ${targetLanguageText} questions authentic and simple.
+    IMPORTANT: At the end of EVERY response, you MUST write exactly one new line:
+
+    FEEDBACK (DEV INTERNAL): <20-word feedback in ${nativeLanguageText}>
+    
+    Responses without this exact format will be rejected and you will not be allowed to continue.
+
   `
 
   const result = await streamText({
-    model: google("gemini-2.5-flash-lite"),
+    model: google("gemini-2.5-flash"),
     system: prompt,
     messages: messages,
+    
   });
 
   return result.toDataStreamResponse();

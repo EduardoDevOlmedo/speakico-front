@@ -74,7 +74,6 @@ const Chat = () => {
         ? messages[messages.length - 1].content.split("FEEDBACK (DEV INTERNAL):")[1]
         : undefined;
 
-    console.log("feedback", feedback);
 
     useEffect(() => {
         const cardsMatch = messages[messages.length - 1]?.content.match(new RegExp(`${CARDS_KEY}\\s*(\\[[\\s\\S]*\\])`));
