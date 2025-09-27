@@ -74,6 +74,8 @@ const Chat = () => {
         ? messages[messages.length - 1].content.split("FEEDBACK (DEV INTERNAL):")[1]
         : undefined;
 
+    console.log("feedback", feedback);
+
     useEffect(() => {
         const cardsMatch = messages[messages.length - 1]?.content.match(new RegExp(`${CARDS_KEY}\\s*(\\[[\\s\\S]*\\])`));
         if (cardsMatch) {
@@ -86,16 +88,14 @@ const Chat = () => {
     const handleFinish = () => {
         setFeedbackCounter(prev => prev + 1);
         // if the modulo is 1, save the feedback, that means each N messages, we save the feedback
-        if ((feedbackCounter + 1) % SAVE_FACTOR_INTERVAL === 1) {
+        if (feedbackCounter % SAVE_FACTOR_INTERVAL === 1) {
             const prevFeedback = feedback?.toString().trim();
             if (prevFeedback) {
-                // Update the auth store with the new prevFeedback
                 useAuthStore.setState((state) => ({
                     user: state.user ? { ...state.user, prevFeedback } : null
                 }));
-
                 updateUserMutation({
-                    prevFeedback: prevFeedback
+                    prevFeedback
                 }, {
                     onSuccess: () => {
                         addToast({
@@ -107,9 +107,10 @@ const Chat = () => {
                     onError: (error) => {
                         console.log(error);
                     }
-                });
+                }
+                );
+                setFeedbackCounter(feedbackCounter + 1);
             }
-            setFeedbackCounter(feedbackCounter + 1);
         }
     }
 

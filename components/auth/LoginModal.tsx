@@ -166,6 +166,7 @@ function AuthTabs() {
         onSubmit: (values) => {
             loginUser(values, {
                 onSuccess: (response) => {
+                    console.log("response", response);
                     useAuthStore.setState({ language: response.user.targetLanguage === "en" ? "es" : "en" });
                     setUser(response.user);
                     location.reload();
